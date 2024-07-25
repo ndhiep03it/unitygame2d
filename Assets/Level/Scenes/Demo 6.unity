@@ -512,7 +512,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!50 &883681551
 Rigidbody2D:
   serializedVersion: 4
@@ -547,6 +547,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
+  StepSound: {fileID: 0}
+  Attack1: {fileID: 0}
+  Attack1_1: {fileID: 0}
 --- !u!212 &883681553
 SpriteRenderer:
   m_ObjectHideFlags: 0

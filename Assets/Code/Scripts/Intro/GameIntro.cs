@@ -7,10 +7,12 @@ public class GameIntro : MonoBehaviour
     public GameObject CameraIntro;
     public GameObject Canvas;
     public GameObject PANEL_PLAYER;
+    public List<EnemyIntro> enemyIntros = new List<EnemyIntro>();
     void Start()
     {
         CameraIntro.SetActive(true);
         StartCoroutine(TimeDT());
+        enemyIntros.AddRange(FindObjectsOfType<EnemyIntro>());
     }
 
     IEnumerator TimeDT()
@@ -26,6 +28,9 @@ public class GameIntro : MonoBehaviour
     public void SetAttack()
     {
         EnemyIntro.Singleton.countIntro = 1;
-        EnemyIntro.Singleton.Walk = true;
+        foreach (var enemy in enemyIntros)
+        {
+            enemy.Walk = true;
+        }
     }
 }

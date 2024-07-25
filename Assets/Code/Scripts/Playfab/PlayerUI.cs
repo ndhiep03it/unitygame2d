@@ -35,9 +35,13 @@ public class PlayerUI : MonoBehaviour
         SliderHPCount.value = PlayerData.Hp;
         SliderHPCount.maxValue = PlayerData.HpMax;
         txtHPUI.text = PlayerData.Hp + "/" + PlayerData.HpMax;
-        txtLevelUI.text = PlayerData.Level.ToString();
+        txtLevelUI.text = PlayerData.level.ToString();
         txtLevelCountUI.text = PlayerData.LevelCount + "%";
-        SliderLevelCount.value = PlayerData.Level;
+        
         //SliderLevelCount.maxValue = PlayerData.LevelCount;
+    }
+    private void Start()
+    {
+        SliderLevelCount.value = PlayerData.LevelCount;
     }
 }

@@ -19,12 +19,10 @@ public class EnemyIntro : MonoBehaviour
 
     private void Awake()
     {
-        if (Singleton == null) // kiểm tra xem đã tồn tại chưa,nếu chưa
-        {
+        
             Singleton = this;
             
-        }
-        else { }
+       
     }
     void Update()
     {
@@ -69,7 +67,7 @@ public class EnemyIntro : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            Walk = false;
+            //Walk = false;
         }
     }
 }

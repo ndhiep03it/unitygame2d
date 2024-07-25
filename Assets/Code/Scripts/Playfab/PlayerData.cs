@@ -6,7 +6,9 @@ public class Character
     public int Quyen = 0;
     public int Intro = 0;
     public int CharacterID = 0;
-    public int Level = 1;
+    public int status;
+    public int Likes = 0;
+    public int level = 1;
     public int Dame = 1;
     public float LevelCount = 1;
     public int Hp = 100;
@@ -18,13 +20,15 @@ public class Character
     public int gold = 1;
     public int diamond = 1;
 
-    public Character(int Level, float Xpos, float Ypos, int Map, float LevelCount, int Hp, int Mp, int Dame, int HpMax, int gold, int diamond,int Quyen, int CharacterID,int Intro)
+    public Character(int level, float Xpos, float Ypos, int Map, float LevelCount, int Hp, int Mp, int Dame, int HpMax, int gold, int diamond,int Quyen, int CharacterID,int Intro,int Likes,int status)
     {
 
         this.Quyen = Quyen;
         this.CharacterID = CharacterID;
+        this.status = status;
+        this.Likes = Likes;
         this.Intro = Intro;
-        this.Level = Level;
+        this.level = level;
         this.Map = Map;
         this.Xpos = Xpos;
         this.Ypos = Ypos;
@@ -43,9 +47,11 @@ public class PlayerData : MonoBehaviour
 {
     public static PlayerData Singleton;
     public static int CharacterID = 0;
+    public static int status;
+    public static int Likes = 0;
     public static int Intro = 0;
     public static int Quyen = 0;
-    public static int Level = 1;
+    public static int level = 1;
     public static int Dame = 10;
     public static int Hp = 100;
     public static int HpMax = 100;
@@ -58,14 +64,16 @@ public class PlayerData : MonoBehaviour
     public static int diamond = 1;
     public Character ReturnClass()
     {
-        return new Character(Level, Xpos, Ypos, Map, LevelCount, Hp, Mp, Dame, HpMax, gold, diamond,Quyen,CharacterID,Intro);
+        return new Character(level, Xpos, Ypos, Map, LevelCount, Hp, Mp, Dame, HpMax, gold, diamond,Quyen,CharacterID,Intro,Likes,status);
     }
 
     public void SetDataUI(Character character)
     {
         CharacterID = character.CharacterID;
+        status = character.status;
+        Likes = character.Likes;
         Intro = character.Intro;
-        Level = character.Level;
+        level = character.level;
         Quyen = character.Quyen;
         Xpos = character.Xpos;
         Ypos = character.Ypos;
@@ -96,7 +104,7 @@ public class PlayerData : MonoBehaviour
         if (LevelCount >= 100)
         {
             LevelCount = 0;
-            Level += 1;
+            level += 1;
         }
     }
 

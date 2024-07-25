@@ -152,12 +152,36 @@ public class PlayfabManager : MonoBehaviour
                 { "Player", JsonConvert.SerializeObject(CharacterBox[0].ReturnClass()) }
             },
             Permission = PlayFab.ClientModels.UserDataPermission.Public,
-
+            
 
         };
 
         PlayFabClientAPI.UpdateUserData(request, OnDataSend, OnError);
-       
+        SetLike();
+    }
+    public void SetLike()
+    {
+        PlayFabClientAPI.UpdateUserData(new PlayFab.ClientModels.UpdateUserDataRequest()
+        {
+            Data = new Dictionary<string, string>()
+            {             
+                {"Likes", PlayerData.Likes.ToString()},
+         
+
+            },
+            Permission = PlayFab.ClientModels.UserDataPermission.Public,
+
+        }, SetDataSuccess, DisplayPlayFabError);
+    }
+
+    private void DisplayPlayFabError(PlayFabError obj)
+    {
+        
+    }
+
+    private void SetDataSuccess(PlayFab.ClientModels.UpdateUserDataResult result)
+    {
+        Debug.Log("Set Like");
     }
 
     private void OnDataSend(PlayFab.ClientModels.UpdateUserDataResult result)
