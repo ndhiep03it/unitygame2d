@@ -6,6 +6,8 @@ public class Character
     public int Quyen = 0;
     public int Intro = 0;
     public int CharacterID = 0;
+    public int Tuchoiketban = 0;
+    public int Diemlike = 0;
     public int status;
     public int Likes = 0;
     public int level = 1;
@@ -20,11 +22,14 @@ public class Character
     public int gold = 1;
     public int diamond = 1;
 
-    public Character(int level, float Xpos, float Ypos, int Map, float LevelCount, int Hp, int Mp, int Dame, int HpMax, int gold, int diamond,int Quyen, int CharacterID,int Intro,int Likes,int status)
+    public Character(int level, float Xpos, float Ypos, int Map, float LevelCount, int Hp, int Mp, int Dame, int HpMax, int gold, int diamond,int Quyen,
+        int CharacterID,int Intro,int Likes,int status, int Tuchoiketban, int Diemlike)
     {
 
         this.Quyen = Quyen;
         this.CharacterID = CharacterID;
+        this.Tuchoiketban = Tuchoiketban;
+        this.Diemlike = Diemlike;
         this.status = status;
         this.Likes = Likes;
         this.Intro = Intro;
@@ -47,6 +52,8 @@ public class PlayerData : MonoBehaviour
 {
     public static PlayerData Singleton;
     public static int CharacterID = 0;
+    public static int Tuchoiketban = 0;
+    public static int Diemlike = 0;
     public static int status;
     public static int Likes = 0;
     public static int Intro = 0;
@@ -64,12 +71,15 @@ public class PlayerData : MonoBehaviour
     public static int diamond = 1;
     public Character ReturnClass()
     {
-        return new Character(level, Xpos, Ypos, Map, LevelCount, Hp, Mp, Dame, HpMax, gold, diamond,Quyen,CharacterID,Intro,Likes,status);
+        return new Character(level, Xpos, Ypos, Map, LevelCount, Hp, Mp, Dame, HpMax, gold, diamond,
+        Quyen,CharacterID,Intro,Likes,status,Tuchoiketban,Diemlike);
     }
 
     public void SetDataUI(Character character)
     {
         CharacterID = character.CharacterID;
+        Tuchoiketban = character.Tuchoiketban;
+        Diemlike = character.Diemlike;
         status = character.status;
         Likes = character.Likes;
         Intro = character.Intro;

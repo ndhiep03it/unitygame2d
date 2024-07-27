@@ -27,6 +27,8 @@ public class PlayfabManager : MonoBehaviour
     [SerializeField] public GameObject PanelCharacter;
     [SerializeField] public GameObject PanelCanvas;
     [SerializeField] public GameObject PanelCanvasUIDaTa;
+    [SerializeField] public Text txtLoginAccount;
+    [SerializeField] private GameObject DataObject;
     [Header("Register")]
     [SerializeField] private InputField Emaill_Input_Register;
     [SerializeField] private InputField PassWord_Input_Register;
@@ -60,6 +62,7 @@ public class PlayfabManager : MonoBehaviour
         Gmail_InputField.text = PlayerPrefs.GetString("user");
         CounrDK = PlayerPrefs.GetInt("count");
         PassWord_InputField.text = PlayerPrefs.GetString("pass");
+        txtLoginAccount.text = "Đăng nhập TK:" + Gmail_InputField.text;
         if (CounrDK == 0)
         {
             toggleDieuKhoan.isOn = false;
@@ -106,7 +109,6 @@ public class PlayfabManager : MonoBehaviour
         StartCoroutine(timeNextScene());
         
     }
-
     IEnumerator timeNextScene()
     {
         yield return new WaitForSeconds(3f);
@@ -127,6 +129,8 @@ public class PlayfabManager : MonoBehaviour
     }
     public void LogOut()
     {
+        
+        SaveDataPlayerGame();
         PlayFabClientAPI.ForgetAllCredentials();
         SceneManager.LoadScene(0);
         NewUpdatesPopupUI.isAlreadyCheckedForUpdates = false;
@@ -157,7 +161,7 @@ public class PlayfabManager : MonoBehaviour
         };
 
         PlayFabClientAPI.UpdateUserData(request, OnDataSend, OnError);
-        SetLike();
+        //SetLike();
     }
     public void SetLike()
     {
@@ -173,17 +177,14 @@ public class PlayfabManager : MonoBehaviour
 
         }, SetDataSuccess, DisplayPlayFabError);
     }
-
     private void DisplayPlayFabError(PlayFabError obj)
     {
         
     }
-
     private void SetDataSuccess(PlayFab.ClientModels.UpdateUserDataResult result)
     {
         Debug.Log("Set Like");
     }
-
     private void OnDataSend(PlayFab.ClientModels.UpdateUserDataResult result)
     {
 
@@ -192,14 +193,20 @@ public class PlayfabManager : MonoBehaviour
     {
         PlayFabClientAPI.GetUserData(new PlayFab.ClientModels.GetUserDataRequest(), OnPlayerGameData, OnError);
     }
-
     private void OnPlayerGameData(PlayFab.ClientModels.GetUserDataResult result)
     {
 
-        if (result.Data != null && result.Data.ContainsKey("Player"))
+        if (result.Data != null && result.Data.ContainsKey("Player") && result.Data.ContainsKey("Likes"))
         {
             //List<Character> characters = JsonConvert.DeserializeObject<List<Character>>(result.Data["PlayerGame"].Value);
             Character characters = JsonConvert.DeserializeObject<Character>(result.Data["Player"].Value);
+            string likes = null;
+            likes = result.Data["Likes"].Value;
+            if (int.TryParse(likes, out PlayerData.Likes))
+            {
+                // Đã chuyển đổi thành công thành kiểu int, bạn có thể sử dụng giá trị 'theogioi' ở đây
+                Debug.Log("Điểm Like: " + PlayerData.Likes);
+            }
 
             for (int i = 0; i < CharacterBox.Length; i++)
             {
@@ -286,7 +293,6 @@ public class PlayfabManager : MonoBehaviour
 
 
     }
-
     private void OnErroForget(PlayFabError obj)
     {
         NotificationGame.SetActive(true);
@@ -294,7 +300,6 @@ public class PlayfabManager : MonoBehaviour
         txttb.text = "Lỗi gửi:" + obj.ErrorMessage;
         StartCoroutine(hide());
     }
-
     private void OnForgetSucces(PlayFab.ClientModels.SendAccountRecoveryEmailResult obj)
     {
         NotificationGame.SetActive(true);
@@ -302,7 +307,6 @@ public class PlayfabManager : MonoBehaviour
         txttb.text = "Đã gửi mật khẩu về Email.";
         StartCoroutine(hide());
     }
-
     private void OnError(PlayFabError error)
     {
         // Check if the error is due to invalid username or password
@@ -335,7 +339,6 @@ public class PlayfabManager : MonoBehaviour
         GetAccountInfoRequest request = new GetAccountInfoRequest();
         PlayFabClientAPI.GetAccountInfo(request, OnGetNameCheckSuccess, OnError);
     }
-
     private void OnGetNameCheckSuccess(GetAccountInfoResult result)
     {
         PanelLogin.SetActive(false);
@@ -434,7 +437,6 @@ public class PlayfabManager : MonoBehaviour
             
         //}
     }
-
     private void OnRegister(RegisterPlayFabUserResult result)
     {
         
@@ -465,14 +467,12 @@ public class PlayfabManager : MonoBehaviour
         // Call the Admin API to delete the account
         PlayFabAdminAPI.DeleteMasterPlayerAccount(request, OnDeleteAccountSuccess, OnDeleteAccountFailure);
     }
-
     private void OnDeleteAccountSuccess(DeleteMasterPlayerAccountResult result)
     {
         Debug.Log("Account successfully deleted.");
         SceneManager.LoadScene(0);
 
     }
-
     private void OnDeleteAccountFailure(PlayFabError error)
     {
         Debug.LogError("Failed to delete account: " + error.GenerateErrorReport());

@@ -31,6 +31,8 @@ public class FriendManager : MonoBehaviour
     //public Text txtNotifionChat;
     public Transform transformUI;
     public Text txtSoluongbanbe;
+    [Header("TỪ CHỐI KẾT BẠN")]
+    public Toggle toggleTuchoi;
     private void OnEnable()
     {
 
@@ -43,11 +45,34 @@ public class FriendManager : MonoBehaviour
         foreach (Transform remove in friendScrollView)
         {
                 Destroy(remove.gameObject);
-        }   
+        }
+        if (PlayerData.Tuchoiketban == 0)
+        {
+            //bật
+            toggleTuchoi.isOn = true;
+        }
+        else if (PlayerData.Tuchoiketban == 1)
+        {
+            //Tắt
+            toggleTuchoi.isOn = false;
+
+        }
     }
+    
     private void Update()
     {
         txtSoluongbanbe.text = "Số lượng bạn bè:" + friendScrollView.childCount + "/200";
+        if (PlayerData.Tuchoiketban == 0)
+        {
+            //bật
+            toggleTuchoi.isOn = true;
+        }
+        else if (PlayerData.Tuchoiketban == 1)
+        {
+            //Tắt
+            toggleTuchoi.isOn = false;
+
+        }
     }
     private void Start()
     {
@@ -99,7 +124,21 @@ public class FriendManager : MonoBehaviour
         // Update UI elements with the player's status information
     }
 
+    public void SettFriends()
+    {
+        if (toggleTuchoi.isOn == true)
+        {
+            //bật
+            PlayerData.Tuchoiketban = 0;
+        }
+        else if (toggleTuchoi.isOn == false)
+        {
+            //Tắt
+            PlayerData.Tuchoiketban = 1;
 
+        }
+        PlayfabManager.Singleton.SaveDataPlayerGame();
+    }
    
     private void Awake()
     {
@@ -154,10 +193,6 @@ public class FriendManager : MonoBehaviour
     }
 
     
- 
-
-
-
 
         void DisplayFriends(List<FriendInfo> friendsCache)
         {
@@ -183,7 +218,7 @@ public class FriendManager : MonoBehaviour
 
                 tempListing.playerNameText.text = f.TitleDisplayName;
                 tempListing.txtplayfab.text = f.FriendPlayFabId;
-                //StartCoroutine(LoadAvatar(f.Profile.AvatarUrl, tempListing.playerAvatarImage));
+                StartCoroutine(LoadAvatar(f.Profile.AvatarUrl, tempListing.playerAvatarImage));
             
         }
         myFriends = friendsCache;
@@ -235,6 +270,7 @@ public class FriendManager : MonoBehaviour
 
     public void GetFriends()
     {
+       
         PlayFabClientAPI.GetFriendsList(new GetFriendsListRequest
         {
            // IncludeSteamFriends = false,
@@ -243,8 +279,9 @@ public class FriendManager : MonoBehaviour
             ProfileConstraints = new PlayerProfileViewConstraints
             {
                 ShowAvatarUrl = true,
-               
-                 
+                ShowLastLogin = true,
+
+
             }
 
         }, result => {

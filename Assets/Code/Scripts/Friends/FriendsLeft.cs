@@ -18,7 +18,8 @@ public class FriendsLeft : MonoBehaviour
     List<FriendInfo> myFriends;
     List<TagModel> tagModels;
     private FriendInfo friendInfoForRemoving;
-    List<FriendInfo> _friends = null;
+    List<FriendInfo> _friends = null;  
+
     void Start()
     {
         GetFriends();
@@ -27,7 +28,7 @@ public class FriendsLeft : MonoBehaviour
     {
         CheckFriends();
     }
-     void CheckFriends()
+    void CheckFriends()
      {
         if(ContentFriendsLeft.childCount ==1)
         {
@@ -41,8 +42,7 @@ public class FriendsLeft : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-    }
-   
+    } 
     public void GetFriends()
     {
         PlayFabClientAPI.GetFriendsList(new GetFriendsListRequest
@@ -63,12 +63,10 @@ public class FriendsLeft : MonoBehaviour
             DisplayFriends(_friends); // triggers your UI
         }, DisplayPlayFabError);
     }
-
     private void DisplayPlayFabError(PlayFabError obj)
     {
 
     }
-
     void DisplayFriends(List<FriendInfo> friendsCache)
     {
         foreach (Transform child in friendScrollView)
@@ -93,7 +91,7 @@ public class FriendsLeft : MonoBehaviour
             FriendsProlLeft tempListing = listing.GetComponent<FriendsProlLeft>();
             tempListing.txtName.text = f.TitleDisplayName;
             tempListing.playfabid = f.FriendPlayFabId;
-            //StartCoroutine(LoadAvatar(f.Profile.AvatarUrl, tempListing.AvatarFriends));
+            StartCoroutine(LoadAvatar(f.Profile.AvatarUrl, tempListing.AvatarFriends));
 
         }
         myFriends = friendsCache;

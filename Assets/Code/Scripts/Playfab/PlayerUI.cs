@@ -7,12 +7,15 @@ using UnityEngine.UI;
 public class PlayerUI : MonoBehaviour
 {
     public static PlayerUI Singleton;
+    public Transform CanvasUI;
     public Text txtNameUI;
     public Slider SliderHPCount;
     public Text txtHPUI;
     public Text txtLevelUI;
     public Slider SliderLevelCount;
     public Text txtLevelCountUI;
+    [Header("ĐIỂM LIKE")]
+    public Text txtDiemlike;
 
     private void Awake()
     {
@@ -37,7 +40,7 @@ public class PlayerUI : MonoBehaviour
         txtHPUI.text = PlayerData.Hp + "/" + PlayerData.HpMax;
         txtLevelUI.text = PlayerData.level.ToString();
         txtLevelCountUI.text = PlayerData.LevelCount + "%";
-        
+        txtDiemlike.text = "Điểm Like:" + PlayerData.Diemlike;
         //SliderLevelCount.maxValue = PlayerData.LevelCount;
     }
     private void Start()

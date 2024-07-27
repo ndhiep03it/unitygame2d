@@ -28,7 +28,7 @@ namespace UpgradeSystem
         [SerializeField] GameObject uiCanvas;
         [SerializeField] Button uiNotNowButton;
         [SerializeField] Button uiUpdateButton;
-        [SerializeField] Text uiDescriptionText; // Assuming you're using the standard UI Text component. Use TextMeshProUGUI if you're using TextMesh Pro.
+        [SerializeField] Text uiDescriptionText; 
         [SerializeField] Text uiTitleText;
         [SerializeField] Text uiVersionText;
 
@@ -125,7 +125,6 @@ namespace UpgradeSystem
             // Clean up any resources it is using.
             request.Dispose();
         }
-
         IEnumerator GetImage(string url)
         {
             UnityWebRequest request = UnityWebRequestTexture.GetTexture(url);
@@ -182,7 +181,7 @@ namespace UpgradeSystem
                         }
                         else
                         {
-                            PanelUI.SetActive(true);
+                            //PanelUI.SetActive(true);
                             uiCanvas.SetActive(false);
 
                         }
@@ -200,7 +199,6 @@ namespace UpgradeSystem
 
             request.Dispose();
         }
-
         void ShowPopup()
         {
             // Add buttons click listeners :
@@ -213,7 +211,6 @@ namespace UpgradeSystem
 
             uiCanvas.SetActive(true);
         }
-
         void HidePopup()
         {
             uiCanvas.SetActive(false);
@@ -222,12 +219,10 @@ namespace UpgradeSystem
             uiNotNowButton.onClick.RemoveAllListeners();
             uiUpdateButton.onClick.RemoveAllListeners();
         }
-
         void OnDestroy()
         {
             StopAllCoroutines();
         }
-
         public void WebUrl()
         {
             Application.OpenURL(webUrl);
