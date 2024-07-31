@@ -5,8 +5,16 @@ using PlayFab.ServerModels;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+public enum data
+{
+    player,
+    noplayer
+    
+}
 
 public class ListingPrefab : MonoBehaviour
 {
@@ -20,18 +28,37 @@ public class ListingPrefab : MonoBehaviour
     public static int status;
     public  int Level;
     public  int Likes;
+    public  int leveldauthan;
     public  int Tuchoiketban;
+    public  int sohatdauthan;
     List<PlayFab.ClientModels.FriendInfo> _friends = null;
     List<PlayFab.ClientModels.FriendInfo> myFriends;
-
+    public GameObject Player_BUTTON;
+    public GameObject Player_ADD;
+    public data  data = new data();
 
     private void Start()
     {
+       
         
         //StartCoroutine(timeCheckData());
         LoadFriendsData(txtplayfab.text);
         //GetFriends();
         StartCoroutine(LoadFriendAvatar(txtplayfab.text, playerAvatarImage));
+        if (data == data.player)
+        {
+            if (playerNameText.text == PlayfabManager.Singleton.txtName.text)
+            {
+                Player_BUTTON.SetActive(true);
+                Player_ADD.SetActive(false);
+
+            }
+            else
+            {
+                Player_BUTTON.SetActive(false);
+                Player_ADD.SetActive(true);
+            }
+        }
     }
     IEnumerator timeCheckData()
     {
@@ -148,16 +175,21 @@ public class ListingPrefab : MonoBehaviour
     }
     private void OnGetStatusSuccess(PlayFab.ClientModels.GetUserDataResult result, string playfabid)
     {
-        if (result.Data != null && result.Data.ContainsKey("Player") && result.Data.ContainsKey("Likes"))
+        if (result.Data != null && result.Data.ContainsKey("Player") && result.Data.ContainsKey("Likes") && result.Data.ContainsKey("Dauthan"))
         {
             string json = result.Data["Player"].Value;
             string jsonLikes = null;
+            string jsonDau = null;
             jsonLikes = result.Data["Likes"].Value;
+            jsonDau = result.Data["Dauthan"].Value;
             if (int.TryParse(jsonLikes, out Likes))
             {
                 txtLike.text = "Like:" + Likes;
             }
-            
+            if (int.TryParse(jsonDau, out sohatdauthan))
+            {
+                //txtLike.text = "Dauthan:" + sohatdauthan;
+            }
             var playerData = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
             foreach (var kvp in playerData)
             {
@@ -182,6 +214,14 @@ public class ListingPrefab : MonoBehaviour
                         
                     }
                 }
+                if (kvp.Key == "leveldauthan")
+                {
+                    if (int.TryParse(kvp.Value.ToString(), out leveldauthan))
+                    {
+
+                    }
+                }
+
             }
             
                  
@@ -216,29 +256,30 @@ public class ListingPrefab : MonoBehaviour
     }
     public void SendLikeToFriend()
     {
-        if (PlayerData.Diemlike >= 1)
+        if (PlayerData.Singleton.Diemlike >= 1)
         {
             PlayFabClientAPI.ExecuteCloudScript(new ExecuteCloudScriptRequest
             {
                 FunctionName = "SendLike", // Tên của hàm CloudScript trên PlayFab
                 FunctionParameter = new { friendPlayFabId = txtplayfab.text },
                 GeneratePlayStreamEvent = true
-            }, result =>
+            }, async result =>
             {
                 //Debug.Log("Successfully sent like to friend.");
                 Thongbao.Singleton.Message("Like thành công cho " + playerNameText.text);
-                PlayerData.Diemlike -= 1;
+                PlayerData.Singleton.Diemlike -= 1;
                 Likes++;
                 txtLike.text = "Like:" + Likes;
-
+                await Task.Delay(5000);
                 // Optionally, you can update UI or other data here
             }, error =>
             {
                 Debug.LogError("Failed to send like: " + error.GenerateErrorReport());
             });
-        } else if (PlayerData.Diemlike <= 0)
+        }
+        else if (PlayerData.Singleton.Diemlike <= 0)
         {
-            Thongbao.Singleton.Message("Không đủ điểm like.Tối thiểu 1 ") ;
+            Thongbao.Singleton.Message("Không đủ điểm like.Tối thiểu 1 ");
         }
 
     }
@@ -250,8 +291,30 @@ public class ListingPrefab : MonoBehaviour
             DestroyButton.Singleton.DestroyData();
         }
         GameObject OBJ = Instantiate(userTT, PlayerUI.Singleton.CanvasUI, false);
-        UserData userData = OBJ.GetComponent<UserData>();
+        UserDataEveryone userData = OBJ.GetComponent<UserDataEveryone>();
         userData.txtTitle.text = "Thông tin:" + playerNameText.text;
+        userData.NameMapDAUTHAN = playerNameText.text;
+        userData.playfabid = txtplayfab.text;
         userData.Avtatar.sprite = playerAvatarImage.sprite;
+        userData.sohatdauthan = sohatdauthan ;
+        userData.leveldauthan = leveldauthan;
+        userData.namePlayer = playerNameText.text;
+
+    }
+    public void GO_HOME()
+    {
+        SceneManager.LoadSceneAsync(3);
+        UserData userData = userTT.GetComponent<UserData>();
+        userData.txtTitle.text = "Thông tin:" + playerNameText.text;
+        userData.NameMapDAUTHAN = playerNameText.text;
+        userData.playfabid = txtplayfab.text;
+        userData.Avtatar.sprite = playerAvatarImage.sprite;
+        userData.sohatdauthan = sohatdauthan;
+        userData.leveldauthan = leveldauthan;
+        userData.namePlayer = playerNameText.text;
+    }
+    public void GO_LOBBY()
+    {
+        SceneManager.LoadSceneAsync(2);
     }
 }

@@ -57,6 +57,7 @@ public class PlayfabManager : MonoBehaviour
     public GameObject ButtonQuyenAdmin;
     public PlayerListManager playerListManager;
     public PlayerData[] CharacterBox;
+    public QuestTaskManager[] questBox;
     private void Start()
     {
         Gmail_InputField.text = PlayerPrefs.GetString("user");
@@ -92,10 +93,10 @@ public class PlayfabManager : MonoBehaviour
         switch (id)
         {
             case 1:
-                PlayerData.CharacterID = id;
+                PlayerData.Singleton.CharacterID = id;
                 break;
             case 2:
-                PlayerData.CharacterID = id;
+                PlayerData.Singleton.CharacterID = id;
                 break;
         }
     }
@@ -112,13 +113,13 @@ public class PlayfabManager : MonoBehaviour
     IEnumerator timeNextScene()
     {
         yield return new WaitForSeconds(3f);
-        if (PlayerData.Intro == 0)
+        if (PlayerData.Singleton.Intro == 0)
         {
             SceneManager.LoadScene(1);//cảnh giới thiệu
             PanelCanvasUIDaTa.SetActive(false);
 
         }
-        else if (PlayerData.Intro == 1)
+        else if (PlayerData.Singleton.Intro == 1)
         {
             SceneManager.LoadScene(2);//cảnh game lobby
             PanelCanvasUIDaTa.SetActive(true);
@@ -145,15 +146,22 @@ public class PlayfabManager : MonoBehaviour
     public void SaveDataPlayerGame()
     {
         List<Character> characters = new List<Character>();
+        List<Quest> quests = new List<Quest>();
         foreach (var item in CharacterBox)
         {
             characters.Add(item.ReturnClass());
+        }
+        foreach (var item in questBox)
+        {
+            quests.Add(item.ReturnClass());
         }
         var request = new PlayFab.ClientModels.UpdateUserDataRequest
         {
             Data = new Dictionary<string, string>
             {
-                { "Player", JsonConvert.SerializeObject(CharacterBox[0].ReturnClass()) }
+                { "Player", JsonConvert.SerializeObject(CharacterBox[0].ReturnClass()) },
+                { "Quest", JsonConvert.SerializeObject(questBox[0].ReturnClass()) },
+
             },
             Permission = PlayFab.ClientModels.UserDataPermission.Public,
             
@@ -161,7 +169,7 @@ public class PlayfabManager : MonoBehaviour
         };
 
         PlayFabClientAPI.UpdateUserData(request, OnDataSend, OnError);
-        //SetLike();
+        SetLike();
     }
     public void SetLike()
     {
@@ -169,8 +177,9 @@ public class PlayfabManager : MonoBehaviour
         {
             Data = new Dictionary<string, string>()
             {             
-                {"Likes", PlayerData.Likes.ToString()},
-         
+                {"Likes", PlayerData.Singleton.Likes.ToString()},
+                {"Dauthan", PlayerData.Singleton.sohatdauthan.ToString()},
+
 
             },
             Permission = PlayFab.ClientModels.UserDataPermission.Public,
@@ -187,7 +196,7 @@ public class PlayfabManager : MonoBehaviour
     }
     private void OnDataSend(PlayFab.ClientModels.UpdateUserDataResult result)
     {
-
+        
     }
     public void GetDataPlayerGame()
     {
@@ -196,16 +205,24 @@ public class PlayfabManager : MonoBehaviour
     private void OnPlayerGameData(PlayFab.ClientModels.GetUserDataResult result)
     {
 
-        if (result.Data != null && result.Data.ContainsKey("Player") && result.Data.ContainsKey("Likes"))
+        if (result.Data != null && result.Data.ContainsKey("Player") && result.Data.ContainsKey("Likes") && result.Data.ContainsKey("Quest") && result.Data.ContainsKey("Dauthan"))
         {
             //List<Character> characters = JsonConvert.DeserializeObject<List<Character>>(result.Data["PlayerGame"].Value);
             Character characters = JsonConvert.DeserializeObject<Character>(result.Data["Player"].Value);
+            Quest quest = JsonConvert.DeserializeObject<Quest>(result.Data["Quest"].Value);
             string likes = null;
+            string dauthan = null;
             likes = result.Data["Likes"].Value;
-            if (int.TryParse(likes, out PlayerData.Likes))
+            dauthan = result.Data["Dauthan"].Value;
+            if (int.TryParse(likes, out PlayerData.Singleton.Likes))
             {
                 // Đã chuyển đổi thành công thành kiểu int, bạn có thể sử dụng giá trị 'theogioi' ở đây
-                Debug.Log("Điểm Like: " + PlayerData.Likes);
+                Debug.Log("Điểm Like: " + PlayerData.Singleton.Likes);
+            }
+            if (int.TryParse(dauthan, out PlayerData.Singleton.sohatdauthan))
+            {
+                // Đã chuyển đổi thành công thành kiểu int, bạn có thể sử dụng giá trị 'theogioi' ở đây
+                Debug.Log("Hạt: " + PlayerData.Singleton.sohatdauthan);
             }
 
             for (int i = 0; i < CharacterBox.Length; i++)
@@ -213,14 +230,18 @@ public class PlayfabManager : MonoBehaviour
                 CharacterBox[i].SetDataUI(characters);
 
             }
+            for (int i = 0; i < questBox.Length; i++)
+            {
+                questBox[i].SetDataUI(quest);
 
+            }
         }
-        if(PlayerData.Quyen == 0)
+        if(PlayerData.Singleton.Quyen == 0)
         {
             //ButtonQuyen.SetActive(false);
             ButtonQuyenAdmin.SetActive(false);
         }
-        else if(PlayerData.Quyen == 1)
+        else if(PlayerData.Singleton.Quyen == 1)
         {
             //ButtonQuyen.SetActive(true);
             ButtonQuyenAdmin.SetActive(true);

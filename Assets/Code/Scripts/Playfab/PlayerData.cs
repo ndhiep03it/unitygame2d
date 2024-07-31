@@ -8,6 +8,9 @@ public class Character
     public int CharacterID = 0;
     public int Tuchoiketban = 0;
     public int Diemlike = 0;
+    public string lichsutrom ="Trống";
+    public int sohatdauthan = 0;
+    public int leveldauthan = 1;
     public int status;
     public int Likes = 0;
     public int level = 1;
@@ -23,13 +26,16 @@ public class Character
     public int diamond = 1;
 
     public Character(int level, float Xpos, float Ypos, int Map, float LevelCount, int Hp, int Mp, int Dame, int HpMax, int gold, int diamond,int Quyen,
-        int CharacterID,int Intro,int Likes,int status, int Tuchoiketban, int Diemlike)
+        int CharacterID,int Intro,int Likes,int status, int Tuchoiketban, int Diemlike,int sohatdauthan, int leveldauthan,string lichsutrom)
     {
 
         this.Quyen = Quyen;
+        this.lichsutrom = lichsutrom;
         this.CharacterID = CharacterID;
         this.Tuchoiketban = Tuchoiketban;
         this.Diemlike = Diemlike;
+        this.sohatdauthan = sohatdauthan;
+        this.leveldauthan = leveldauthan;
         this.status = status;
         this.Likes = Likes;
         this.Intro = Intro;
@@ -51,28 +57,31 @@ public class Character
 public class PlayerData : MonoBehaviour
 {
     public static PlayerData Singleton;
-    public static int CharacterID = 0;
-    public static int Tuchoiketban = 0;
-    public static int Diemlike = 0;
-    public static int status;
-    public static int Likes = 0;
-    public static int Intro = 0;
-    public static int Quyen = 0;
-    public static int level = 1;
-    public static int Dame = 10;
-    public static int Hp = 100;
-    public static int HpMax = 100;
-    public static int Mp = 100;
-    public static float LevelCount = 1;
-    public static int Map = 1;
-    public static float Xpos = 0;
-    public static float Ypos = 0;
-    public static int gold = 1;
-    public static int diamond = 1;
+    public  int CharacterID = 0;
+    public string lichsutrom = "Trống";
+    public int Tuchoiketban = 0;
+    public  int Diemlike = 0;
+    public  int sohatdauthan = 0;
+    public  int leveldauthan = 0;
+    public  int status;
+    public  int Likes = 0;
+    public  int Intro = 0;
+    public  int Quyen = 0;
+    public  int level = 1;
+    public  int Dame = 10;
+    public  int Hp = 100;
+    public  int HpMax = 100;
+    public  int Mp = 100;
+    public  float LevelCount = 1;
+    public  int Map = 1;
+    public  float Xpos = 0;
+    public  float Ypos = 0;
+    public  int gold = 1;
+    public  int diamond = 1;
     public Character ReturnClass()
     {
         return new Character(level, Xpos, Ypos, Map, LevelCount, Hp, Mp, Dame, HpMax, gold, diamond,
-        Quyen,CharacterID,Intro,Likes,status,Tuchoiketban,Diemlike);
+        Quyen,CharacterID,Intro,Likes,status,Tuchoiketban,Diemlike,sohatdauthan,leveldauthan,lichsutrom);
     }
 
     public void SetDataUI(Character character)
@@ -80,6 +89,8 @@ public class PlayerData : MonoBehaviour
         CharacterID = character.CharacterID;
         Tuchoiketban = character.Tuchoiketban;
         Diemlike = character.Diemlike;
+        //sohatdauthan = character.sohatdauthan;
+        leveldauthan = character.leveldauthan;
         status = character.status;
         Likes = character.Likes;
         Intro = character.Intro;
@@ -95,6 +106,12 @@ public class PlayerData : MonoBehaviour
         Dame = character.Dame;
         gold = character.gold;
         diamond = character.diamond;
+    }
+    public void SetLichSuUI(Character character)
+    {
+      
+        lichsutrom = character.lichsutrom;
+       
     }
     private void Awake()
     {

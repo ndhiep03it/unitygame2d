@@ -46,12 +46,12 @@ public class FriendManager : MonoBehaviour
         {
                 Destroy(remove.gameObject);
         }
-        if (PlayerData.Tuchoiketban == 0)
+        if (PlayerData.Singleton.Tuchoiketban == 0)
         {
             //bật
             toggleTuchoi.isOn = true;
         }
-        else if (PlayerData.Tuchoiketban == 1)
+        else if (PlayerData.Singleton.Tuchoiketban == 1)
         {
             //Tắt
             toggleTuchoi.isOn = false;
@@ -62,12 +62,12 @@ public class FriendManager : MonoBehaviour
     private void Update()
     {
         txtSoluongbanbe.text = "Số lượng bạn bè:" + friendScrollView.childCount + "/200";
-        if (PlayerData.Tuchoiketban == 0)
+        if (PlayerData.Singleton.Tuchoiketban == 0)
         {
             //bật
             toggleTuchoi.isOn = true;
         }
-        else if (PlayerData.Tuchoiketban == 1)
+        else if (PlayerData.Singleton.Tuchoiketban == 1)
         {
             //Tắt
             toggleTuchoi.isOn = false;
@@ -129,12 +129,12 @@ public class FriendManager : MonoBehaviour
         if (toggleTuchoi.isOn == true)
         {
             //bật
-            PlayerData.Tuchoiketban = 0;
+            PlayerData.Singleton.Tuchoiketban = 0;
         }
         else if (toggleTuchoi.isOn == false)
         {
             //Tắt
-            PlayerData.Tuchoiketban = 1;
+            PlayerData.Singleton.Tuchoiketban = 1;
 
         }
         PlayfabManager.Singleton.SaveDataPlayerGame();

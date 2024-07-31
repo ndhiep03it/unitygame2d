@@ -1002,6 +1002,9 @@ MonoBehaviour:
   Level: 0
   Likes: 0
   Tuchoiketban: 0
+  Player_BUTTON: {fileID: 0}
+  Player_ADD: {fileID: 0}
+  data: 1
 --- !u!1 &3334909387790003593
 GameObject:
   m_ObjectHideFlags: 0
